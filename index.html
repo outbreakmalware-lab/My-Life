@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<!-- ts took me way too long lol-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Asmodeus — a cinematic journey through the life, mind, and work of a creator obsessed with honest systems and quiet beauty. Not a portfolio. A life in motion.">
+    <meta name="author" content="Asmodeus">
+    <title>Asmodeus — A Life in Motion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@family=Instrument+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --deep: #050508;
+            --text: #f5f5f7;
+            --muted: #a8a8b0;
+            --accent: #c9a227;
+            --glass: rgba(255,255,255,0.035);
+            --glass-border: rgba(255,255,255,0.08);
+            --glow: rgba(201, 162, 39, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .cinematic-scene {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 120px 6vw;
+            overflow: hidden;
+        }
+
+        .scene-deep { background: var(--deep); }
+        #opening-scene {
+            background-image: linear-gradient(rgba(5,5,8,0.68), rgba(5,5,8,0.78)), url('https://picsum.photos/id/1015/2000/1200');
+            background-size: cover;
+            background-position: center 35%;
+            background-repeat: no-repeat;
+        }
+        .scene-memory { background: #111115; }
+        .scene-quiet { background: #0f0f14; }
+        .scene-journey { background: #0c0c11; }
+        .scene-human { background: #0a0a0f; }
+        .scene-dispatches { background: #0c0c11; }
+        .scene-final { background: #050508; min-height: 100vh; }
+        .scene-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 2; }
+        .film-grain {
+            position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.012) 50%, transparent 50%), linear-gradient(90deg, rgba(255,255,255,0.012) 50%, transparent 50%);
+            background-size: 3px 3px; pointer-events: none; z-index: 1; opacity: 0.7; mix-blend-mode: screen;
+        }
+        .cinematic-title { font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(96px, 17vw, 148px); font-weight: 400; letter-spacing: -7.5px; line-height: 0.86; margin-bottom: 32px; }
+        .chapter-label { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 16px; opacity: 0.9; }
+        .chapter-headline { font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(44px, 6.2vw, 72px); font-weight: 400; letter-spacing: -3px; line-height: 1.02; max-width: 17ch; }
+        .chapter-body { max-width: 640px; font-size: 19.5px; color: #c8c8d0; margin-top: 32px; }
+        .chapter-body p { margin-bottom: 26px; }
+        .glass { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 42px; backdrop-filter: blur(20px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+        .glow-accent { box-shadow: 0 0 0 1px var(--glow), 0 20px 60px -15px rgba(0,0,0,0.6); }
+        .scroll-instruction { position: absolute; bottom: 72px; left: 50%; transform: translateX(-50%); font-size: 12px; letter-spacing: 3px; color: #555; display: flex; flex-direction: column; align-items: center; gap: 14px; z-index: 3; }
+        .scroll-instruction .line { width: 1px; height: 48px; background: linear-gradient(transparent, #444); }
+
+        .milestone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 28px;
+            margin-top: 60px;
+        }
+
+        .milestone {
+            background: rgba(255,255,255,0.022);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 18px;
+            padding: 36px 32px;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
+                        box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                        border-color 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .milestone:hover {
+            transform: translateY(-6px) scale(1.005);
+            border-color: rgba(201,162,39,0.25);
+            box-shadow: 0 30px 70px -20px rgba(0,0,0,0.5), 0 0 0 1px var(--glow);
+        }
+        .milestone::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg, rgba(201,162,39,0.03) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        .milestone:hover::after {
+            opacity: 1;
+        }
+
+        .milestone-year {
+            font-size: 13px;
+            letter-spacing: 2.5px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+        .milestone-title {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 23px;
+            letter-spacing: -0.8px;
+            margin-bottom: 14px;
+            line-height: 1.15;
+        }
+        .milestone-text {
+            font-size: 16.5px;
+            color: #b8b8c2;
+            line-height: 1.65;
+        }
+
+        .timeline-container {
+            margin-top: 70px;
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 48px;
+            bottom: 32px;
+            width: 2px;
+            background: linear-gradient(transparent, var(--accent), transparent);
+            opacity: 0.25;
+            transform: translateX(-50%);
+        }
+        .timeline-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+            margin-bottom: 48px;
+            position: relative;
+            cursor: pointer;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-year {
+            width: 78px;
+            flex-shrink: 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent);
+            padding-top: 4px;
+            letter-spacing: 1px;
+        }
+        .timeline-content {
+            max-width: 520px;
+            font-size: 18px;
+            color: #d2d2d8;
+            line-height: 1.55;
+            transition: color 0.2s ease;
+        }
+        .timeline-item.active .timeline-content {
+            color: #f0f0f5;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 6px;
+            width: 13px;
+            height: 13px;
+            background: var(--accent);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 0 4px rgba(201,162,39,0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .timeline-item:hover .timeline-dot {
+            transform: translateX(-50%) scale(1.3);
+        }
+
+        @media (max-width: 768px) {
+            .timeline-item:hover .timeline-dot {
+                transform: scale(1.3);
+            }
+        }
+
+        .human-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+            margin-top: 50px;
+        }
+        .human-card {
+            background: rgba(255,255,255,0.018);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 28px 26px;
+            transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .human-card:hover {
+            background: rgba(255,255,255,0.028);
+            transform: translateY(-6px) scale(1.015);
+            border-color: rgba(255,255,255,0.15);
+            box-shadow: 0 20px 50px -15px rgba(0,0,0,0.3);
+        }
+        .human-label {
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .human-text {
+            font-size: 16.5px;
+            color: #c2c2ca;
+            line-height: 1.6;
+        }
+
+        #live-dispatches .scene-inner {
+            max-width: 780px;
+        }
+        .announcements-glass {
+            margin-top: 42px;
+            background: rgba(255,255,255,0.022);
+            border: 1px solid rgba(255,255,255,0.065);
+            border-radius: 18px;
+            padding: 38px 34px;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 10px 40px -15px rgba(0,0,0,0.4);
+        }
+
+        #announcements-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        #announcements-list > * {
+            background: rgba(255,255,255,0.018);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            padding: 20px 24px;
+            transition: transform 0.3s cubic-bezier(0.23,1,0.32,1), box-shadow 0.3s ease, border-color 0.3s ease;
+            animation: cinematicIn 0.65s cubic-bezier(0.23, 1, 0.32, 1) both;
+        }
+        #announcements-list > *:hover {
+            transform: translateY(-2px);
+            border-color: rgba(201,162,39,0.2);
+            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.35);
+        }
+        @keyframes cinematicIn {
+            from { opacity: 0; transform: translateY(26px) scale(0.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .post {
+            background: rgba(255,255,255,0.012);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 0;
+        }
+        .post-date {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .post-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e8e8ee;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .post-excerpt {
+            font-size: 15px;
+            color: #b8b8c2;
+            line-height: 1.55;
+        }
+
+        .admin-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(5,5,8,0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            backdrop-filter: blur(20px);
+        }
+        .admin-modal-inner {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 40px 36px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+        .admin-modal h3 {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-size: 22px;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .admin-modal input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #f5f5f7;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 15px;
+            margin: 20px 0 24px;
+            outline: none;
+        }
+        .admin-modal button {
+            background: var(--accent);
+            color: #0a0a0f;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        #admin-lock:hover {
+            opacity: 0.9 !important;
+            transform: scale(1.1);
+        }
+
+        .rich-text-toolbar {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 6px 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .rich-text-toolbar button {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #c9a227;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .rich-text-toolbar button:hover {
+            background: rgba(201,162,39,0.15);
+            border-color: #c9a227;
+        }
+        .rich-text-toolbar select,
+        .rich-text-toolbar input[type="color"] {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #ddd;
+            border-radius: 8px;
+            padding: 4px 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .rich-text-toolbar input[type="color"] {
+            width: 34px;
+            height: 28px;
+            padding: 0;
+            border: none;
+            background: transparent;
+        }
+
+        .final-headline {
+            font-size: clamp(48px, 7.2vw, 78px);
+            font-weight: 400;
+            letter-spacing: -3.5px;
+            max-width: 15ch;
+            line-height: 1.0;
+        }
+        .final-text {
+            font-size: 19px;
+            color: #a8a8b0;
+            max-width: 460px;
+            margin: 38px auto 58px;
+        }
+        .final-cta {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 15px;
+            letter-spacing: 0.6px;
+            border-bottom: 1px solid currentColor;
+            padding-bottom: 3px;
+            transition: all 0.2s ease;
+        }
+        .final-cta:hover {
+            letter-spacing: 1.5px;
+        }
+
+        .chapter-nav {
+            position: fixed;
+            top: 42px;
+            right: 32px;
+            z-index: 100;
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            letter-spacing: 2px;
+            background: rgba(5,5,8,0.7);
+            padding: 9px 18px;
+            border-radius: 9999px;
+            border: 1px solid rgba(255,255,255,0.07);
+            backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+        }
+        .chapter-nav a {
+            color: var(--text);
+            text-decoration: none;
+            padding: 2px 0;
+            transition: color 0.2s ease;
+            opacity: 0.85;
+        }
+        .chapter-nav a:hover {
+            color: var(--accent);
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            .chapter-nav { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .cinematic-scene { padding: 100px 5vw; }
+            .milestone-grid { grid-template-columns: 1fr; }
+            .human-grid { grid-template-columns: 1fr; }
+            .timeline-line { left: 28px; top: 42px; bottom: 28px; }
+            .timeline-item { gap: 20px; padding-left: 48px; }
+            .timeline-dot { left: 28px; }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        .milestone {
+            will-change: transform;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Subtle chapter navigation -->
+    <nav class="chapter-nav" aria-label="Chapters">
+        <a href="#chapter-01">01</a>
+        <a href="#chapter-02">02</a>
+        <a href="#chapter-03">03</a>
+        <a href="#human">04</a>
+        <a href="#live-dispatches">05</a>
+    </nav>
+
+    <!-- SCENE 01 — CINEMATIC INTRO -->
+    <section id="opening-scene" class="cinematic-scene scene-deep">
+        <div class="scene-content" style="text-align:center; position:relative; z-index:2;">
+            <div class="film-grain"></div>
+            <h1 id="title-name" class="cinematic-title">Asmodeus</h1>
+            <div style="margin-top:32px; font-size:17.5px; letter-spacing:0.6px; opacity:0.75; max-width:420px; margin-left:auto; margin-right:auto;">
+                This is not a portfolio.<br>
+                This is a life in motion.
+            </div>
+        </div>
+        <div class="scroll-instruction">
+            <div class="line"></div>
+            <span>scroll to begin</span>
+        </div>
+    </section>
+
+    <section id="chapter-01" class="cinematic-scene scene-memory">
+        <div class="scene-inner">
+            <div class="chapter-label">Chapter 01 — The Spark</div>
+            <h2 class="chapter-headline">I built entire worlds that no one would ever see.</h2>
+            <div class="chapter-body">
+                <p>Years inside Minecraft. Not playing — building. Cities with working transit systems, stories with emotional arcs, lives that only existed because I willed them into being.</p>
+                <p>I wasn’t trying to be discovered. I was trying to understand what it means for something to feel alive.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="chapter-02" class="cinematic-scene scene-deep">
+        <div class="scene-inner">
+            <div class="chapter-label">2018 — 2022</div>
+            <h2 class="chapter-headline">I broke things on purpose until they started to feel honest.</h2>
+            <div class="chapter-body">
+                <p>Ugly websites. Over-engineered failures. Designs that made people uncomfortable in the best way.</p>
+                <p>Every broken thing taught me more than the polished ones ever could. The ugly taught me truth.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="chapter-03" class="cinematic-scene scene-journey">
+        <div class="scene-inner">
+            <div class="chapter-label">Chapter 03 — The Journey</div>
+            <h2 class="chapter-headline">Moments that split my life in two.</h2>
+
+            <div class="milestone-grid">
+                <div class="milestone" data-tilt>
+                    <div class="milestone-year">2019</div>
+                    <div class="milestone-title">The First Echo</div>
+                    <div class="milestone-text">A tiny website for a friend in pain. It made them feel seen for the first time. I cried when they told me. I finally understood why I create.</div>
+                </div>
+                <div class="milestone" data-tilt>
+                    <div class="milestone-year">2021</div>
+                    <div class="milestone-title">The Scale Realization</div>
+                    <div class="milestone-text">Work reached thousands. Analytics looked beautiful. But I felt empty. Scale without soul is just noise. I began the long walk back to honesty.</div>
+                </div>
+                <div class="milestone" data-tilt>
+                    <div class="milestone-year">2024</div>
+                    <div class="milestone-title">The Honest Turn</div>
+                    <div class="milestone-text">I stopped chasing impressive. I started chasing true. Quiet systems. Interfaces that disappear. Work that feels like it was always meant to exist.</div>
+                </div>
+                <div class="milestone" data-tilt>
+                    <div class="milestone-year">NOW</div>
+                    <div class="milestone-title">The Living Work</div>
+                    <div class="milestone-text">Still becoming. Still listening. Building tools that feel like conversations, not products. The story keeps writing itself through me.</div>
+                </div>
+            </div>
+
+            <div class="timeline-container">
+                <div class="chapter-label" style="margin-bottom:24px;">The Turning Points</div>
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item" data-year="2019">
+                    <div class="timeline-year">2019</div>
+                    <div class="timeline-content">Made something that made someone feel seen. Cried for the first time because of my own work.</div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item" data-year="2021">
+                    <div class="timeline-year">2021</div>
+                    <div class="timeline-content">Reached thousands. Realized scale is seductive but hollow. Began the return to soul.</div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item" data-year="2024">
+                    <div class="timeline-year">2024</div>
+                    <div class="timeline-content">Stopped performing. Started telling the truth. The work finally started to feel like mine.</div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item" data-year="2026">
+                    <div class="timeline-year">2026</div>
+                    <div class="timeline-content">Still here. Still listening. The most honest chapter yet.</div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="human" class="cinematic-scene scene-human">
+        <div class="scene-inner">
+            <div class="chapter-label">The Human</div>
+            <h2 class="chapter-headline">I don’t want to build things that impress people.</h2>
+            <div class="chapter-body">
+                <p>I want to build things that make people feel less alone inside their own heads.</p>
+            </div>
+
+            <div class="human-grid">
+                <div class="human-card">
+                    <div class="human-label">Content Creation</div>
+                    <div class="human-text">I write, design, film, and build because creation is how I translate the noise in my head into something that might help someone else feel seen. Every piece is a small act of connection.</div>
+                </div>
+                <div class="human-card">
+                    <div class="human-label">Creative Philosophy</div>
+                    <div class="human-text">The best interfaces disappear. The best systems feel inevitable. The best work feels like it was always waiting to be discovered.</div>
+                </div>
+                <div class="human-card">
+                    <div class="human-label">Lessons That Stayed</div>
+                    <div class="human-text">Failure remembers everything. Perfection is the enemy of feeling. People don’t remember what you made — they remember how you made them feel.</div>
+                </div>
+                <div class="human-card">
+                    <div class="human-label">What I Dream</div>
+                    <div class="human-text">To leave behind a handful of things that make the next lonely kid feel a little less lost. That would be enough.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="live-dispatches" class="cinematic-scene scene-dispatches">
+        <div class="scene-inner">
+            <div class="chapter-label">Chapter 04 — Current Transmissions</div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <h2 class="chapter-headline" style="margin-bottom:0;">Signals from right now.</h2>
+                <span id="admin-lock" title="Admin login" style="color:#c9a227; opacity:0.45; font-size:15px; cursor:pointer; transition:all 0.2s ease; padding-top:6px;">
+                    <i class="fas fa-lock"></i>
+                </span>
+            </div>
+
+            <div class="announcements-glass">
+                <div id="announcements-list"></div>
+
+                <div id="admin-post-form" style="display:none; margin-top:40px; padding:30px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.08); border-radius:12px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cinematic-scene scene-final">
+        <div class="scene-inner" style="text-align:center;">
+            <div class="film-grain"></div>
+            <h2 class="final-headline">The story is still being written.</h2>
+            <p class="final-text">
+                Every interface is a sentence.<br>
+                Every system is a promise.
+            </p>
+            <a href="mailto:outbreakmalware@gmail.com" class="final-cta">If something here stayed with you</a>
+            <div style="margin-top:110px; font-size:12.5px; letter-spacing:1.5px; color:#444;">
+                Asmodeus • Still becoming • 2026
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function initCinematicNameDrop() {
+            const name = document.getElementById('title-name');
+            if (!name) return;
+
+            gsap.set(name, { y: -380, opacity: 0, scale: 0.58 });
+
+            const tl = gsap.timeline({ delay: 0.55 });
+
+            tl.to(name, {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 1.15,
+                ease: "power3.in"
+            })
+            .to(name, {
+                scaleY: 0.76,
+                scaleX: 1.18,
+                duration: 0.07,
+                ease: "power2.out"
+            })
+            .to(name, {
+                scaleY: 1,
+                scaleX: 1,
+                y: -32,
+                duration: 0.6,
+                ease: "bounce.out"
+            })
+            .to(name, {
+                y: 0,
+                duration: 0.42,
+                ease: "power2.out"
+            });
+        }
+
+        function initScrollReveals() {
+            const reveals = document.querySelectorAll('.chapter-headline, .chapter-body, .milestone, .human-card, .timeline-item, .chapter-label');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const isLabel = el.classList.contains('chapter-label');
+                        const isMilestone = el.classList.contains('milestone');
+
+                        gsap.to(el, {
+                            opacity: 1,
+                            y: 0,
+                            scale: isMilestone ? 1 : 1,
+                            duration: isLabel ? 0.7 : 0.95,
+                            ease: isLabel ? "back.out(1.2)" : "power3.out",
+                            delay: 0.04 * index + (isMilestone ? 0.1 : 0)
+                        });
+
+                         if (isLabel) {
+                            gsap.fromTo(el, 
+                                { letterSpacing: '8px' }, 
+                                { letterSpacing: '4px', duration: 1.1, ease: "power2.out", delay: 0.04 * index }
+                            );
+                        }
+
+                        observer.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.08, rootMargin: "0px 0px -80px 0px" });
+
+            reveals.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(42px)';
+                observer.observe(el);
+            });
+        }
+
+        function initMilestoneTilt() {
+            const cards = document.querySelectorAll('.milestone');
+
+            cards.forEach(card => {
+                let bounds;
+
+                const updateBounds = () => bounds = card.getBoundingClientRect();
+
+                window.addEventListener('resize', updateBounds);
+                updateBounds();
+
+                card.addEventListener('mousemove', (e) => {
+                    const x = (e.clientX - bounds.left) / bounds.width - 0.5;
+                    const y = (e.clientY - bounds.top) / bounds.height - 0.5;
+
+                    gsap.to(card, {
+                        rotationY: x * 7,
+                        rotationX: -y * 8,
+                        transformPerspective: 900,
+                        duration: 0.4,
+                        ease: "power2.out"
+                    });
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        rotationY: 0,
+                        rotationX: 0,
+                        duration: 0.7,
+                        ease: "elastic.out(1, 0.6)"
+                    });
+                });
+
+                card.addEventListener('click', () => {
+                    card.style.transition = 'transform 0.2s ease';
+                    gsap.to(card, { scale: 0.985, duration: 0.08, yoyo: true, repeat: 1 });
+                });
+            });
+        }
+
+        function initInteractiveTimeline() {
+            const items = document.querySelectorAll('.timeline-item');
+
+            items.forEach(item => {
+                item.addEventListener('click', () => {
+                    items.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+
+                    const dot = item.querySelector('.timeline-dot');
+                    if (dot) {
+                        gsap.fromTo(dot, 
+                            { scale: 1.6 }, 
+                            { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.5)" }
+                        );
+                    }
+
+                    setTimeout(() => {
+                        item.classList.remove('active');
+                    }, 2400);
+                });
+            });
+        }
+
+        function initAmbientMotion() {
+            const grains = document.querySelectorAll('.film-grain');
+            grains.forEach(grain => {
+                gsap.to(grain, {
+                    opacity: 0.55,
+                    duration: 4.2,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                });
+            });
+        }
+
+        function initKeyboardNav() {
+            const items = document.querySelectorAll('.timeline-item');
+            items.forEach((item, index) => {
+                item.setAttribute('tabindex', '0');
+                item.setAttribute('role', 'button');
+                item.setAttribute('aria-label', `Timeline moment ${item.dataset.year}`);
+
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        item.click();
+                    }
+                    if (e.key === 'ArrowDown' && items[index + 1]) {
+                        items[index + 1].focus();
+                    }
+                    if (e.key === 'ArrowUp' && items[index - 1]) {
+                        items[index - 1].focus();
+                    }
+                });
+            });
+        }
+
+        function initCinematicExtras() {
+            const title = document.getElementById('title-name');
+            if (title) {
+                gsap.to(title, {
+                    scale: 1.008,
+                    duration: 3.8,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut",
+                    delay: 2.8
+                });
+            }
+
+            const timelineContainer = document.querySelector('.timeline-container');
+            if (timelineContainer) {
+                const line = timelineContainer.querySelector('.timeline-line');
+                if (line) {
+                    gsap.set(line, { scaleY: 0, transformOrigin: 'top center' });
+
+                    const lineObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                gsap.to(line, {
+                                    scaleY: 1,
+                                    duration: 1.6,
+                                    ease: "power3.out",
+                                    delay: 0.3
+                                });
+                                lineObserver.disconnect();
+                            }
+                        });
+                    }, { threshold: 0.3 });
+                    lineObserver.observe(timelineContainer);
+                }
+            }
+
+            const scrollLine = document.querySelector('.scroll-instruction .line');
+            if (scrollLine) {
+                gsap.to(scrollLine, {
+                    height: 58,
+                    opacity: 0.9,
+                    duration: 1.8,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                });
+            }
+
+            document.querySelectorAll('.milestone').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, { boxShadow: '0 35px 80px -20px rgba(0,0,0,0.55), 0 0 0 1px rgba(201,162,39,0.25)', duration: 0.4 });
+                });
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, { boxShadow: '0 30px 70px -20px rgba(0,0,0,0.5), 0 0 0 1px var(--glow)', duration: 0.6 });
+                });
+            });
+        }
+
+        function initSecretAdmin() {
+            const label = document.querySelector('#live-dispatches .chapter-label');
+            if (label) {
+                let clickCount = 0;
+                label.style.cursor = 'default';
+
+                label.addEventListener('click', () => {
+                    clickCount++;
+                    if (clickCount >= 5) {
+                        clickCount = 0;
+                        showAdminLoginModal();
+                    }
+                    setTimeout(() => { clickCount = 0; }, 1800);
+                });
+            }
+
+            const lock = document.getElementById('admin-lock');
+            if (lock) {
+                lock.addEventListener('click', (e) => {
+                    e.stopImmediatePropagation();
+                    showAdminLoginModal();
+                });
+            }
+        }
+
+        function formatText(command) {
+            const editor = document.getElementById('post-excerpt');
+            if (!editor) return;
+            editor.focus();
+            document.execCommand(command, false, null);
+        }
+
+        function formatTextColor(color) {
+            const editor = document.getElementById('post-excerpt');
+            if (!editor) return;
+            editor.focus();
+            document.execCommand('foreColor', false, color);
+        }
+
+        function formatFont(fontFamily) {
+            const editor = document.getElementById('post-excerpt');
+            if (!editor) return;
+            editor.focus();
+            if (fontFamily === 'inherit') {
+                document.execCommand('removeFormat', false, null);
+            } else {
+                document.execCommand('fontName', false, fontFamily);
+            }
+        }
+
+        function clearFormatting() {
+            const editor = document.getElementById('post-excerpt');
+            if (!editor) return;
+            editor.focus();
+            document.execCommand('removeFormat', false, null);
+        }
+
+        function showAdminLoginModal() {
+            document.querySelectorAll('.admin-modal').forEach(m => m.remove());
+
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal';
+            modal.innerHTML = `
+                <div class="admin-modal-inner">
+                    <h3>Private Transmission</h3>
+                    <p style="color:#888; font-size:13px; margin-bottom:4px;">For the keeper of the story only.</p>
+                    <input type="password" id="admin-pass" placeholder="Enter access phrase" autofocus>
+                    <button id="admin-unlock-btn">Unlock</button>
+                    <div style="margin-top:18px; font-size:11px; color:#555;">5 clicks on “Chapter 04” to return here</div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            gsap.fromTo(modal, { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out" });
+
+            const input = modal.querySelector('#admin-pass');
+            const btn = modal.querySelector('#admin-unlock-btn');
+
+            const tryUnlock = () => {
+                const pass = input.value.trim();
+                if (pass === 'Asmodeus2026' || pass === 'transmit') {
+                    window.isAdmin = true;
+
+                    const formContainer = document.getElementById('admin-post-form');
+                    if (formContainer) {
+                        formContainer.innerHTML = `
+                            <div style="margin-bottom:12px; font-size:12px; color:#c9a227; letter-spacing:1px;">NEW TRANSMISSION</div>
+                            <input type="text" id="post-title" placeholder="Title..." style="width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); color:#f5f5f7; padding:13px 14px; border-radius:10px; margin-bottom:12px; font-size:15px;">
+                            <div class="rich-text-toolbar">
+                                <button onclick="formatText('bold')" title="Bold">B</button>
+                                <button onclick="formatText('italic')" title="Italic"><i>I</i></button>
+                                <button onclick="formatText('underline')" title="Underline">U</button>
+                                <input type="color" onchange="formatTextColor(this.value)" title="Text color" value="#f5f5f7">
+                                <select onchange="formatFont(this.value)" title="Font Family" style="min-width: 170px; max-height: 200px;">
+                                    <option value="inherit">Default (Site Font)</option>
+                                    
+                                    <optgroup label="Serif / Elegant">
+                                        <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+                                        <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                                        <option value="'Palatino Linotype', 'Book Antiqua', Palatino, serif">Palatino</option>
+                                        <option value="Garamond, 'Palatino Linotype', serif">Garamond</option>
+                                        <option value="Baskerville, 'Palatino Linotype', serif">Baskerville</option>
+                                        <option value="'Book Antiqua', Palatino, serif">Book Antiqua</option>
+                                        <option value="Didot, 'Bodoni 72', serif">Didot</option>
+                                        <option value="'Bodoni 72', Bodoni, serif">Bodoni</option>
+                                        <option value="'Century Schoolbook', Georgia, serif">Century Schoolbook</option>
+                                        <option value="Constantia, Georgia, serif">Constantia</option>
+                                        <option value="Cambria, Georgia, serif">Cambria</option>
+                                        <option value="'Hoefler Text', Georgia, serif">Hoefler Text</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Sans Serif / Modern">
+                                        <option value="'Helvetica Neue', Helvetica, Arial, sans-serif">Helvetica Neue</option>
+                                        <option value="Arial, Helvetica, sans-serif">Arial</option>
+                                        <option value="'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">Segoe UI</option>
+                                        <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                                        <option value="Inter, system-ui, -apple-system, sans-serif">Inter</option>
+                                        <option value="Roboto, 'Helvetica Neue', Arial, sans-serif">Roboto</option>
+                                        <option value="Open Sans, system-ui, sans-serif">Open Sans</option>
+                                        <option value="Lato, system-ui, sans-serif">Lato</option>
+                                        <option value="Montserrat, system-ui, sans-serif">Montserrat</option>
+                                        <option value="Poppins, system-ui, sans-serif">Poppins</option>
+                                        <option value="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">System UI</option>
+                                        <option value="Tahoma, Verdana, sans-serif">Tahoma</option>
+                                        <option value="'Trebuchet MS', Helvetica, sans-serif">Trebuchet MS</option>
+                                        <option value="Calibri, 'Calibri Light', sans-serif">Calibri</option>
+                                        <option value="Candara, Calibri, sans-serif">Candara</option>
+                                        <option value="'SF Pro Text', -apple-system, system-ui, sans-serif">SF Pro</option>
+                                        <option value="'Fira Sans', system-ui, sans-serif">Fira Sans</option>
+                                        <option value="'IBM Plex Sans', system-ui, sans-serif">IBM Plex Sans</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Monospace / Code">
+                                        <option value="'SF Mono', Menlo, Consolas, 'Courier New', monospace">SF Mono</option>
+                                        <option value="Consolas, 'Courier New', monospace">Consolas</option>
+                                        <option value="Menlo, Monaco, 'Courier New', monospace">Menlo</option>
+                                        <option value="Monaco, 'Courier New', monospace">Monaco</option>
+                                        <option value="'Courier New', Courier, monospace">Courier New</option>
+                                        <option value="'Fira Code', 'SF Mono', Consolas, monospace">Fira Code</option>
+                                        <option value="'Source Code Pro', Consolas, monospace">Source Code Pro</option>
+                                        <option value="'JetBrains Mono', Consolas, monospace">JetBrains Mono</option>
+                                        <option value="'IBM Plex Mono', Consolas, monospace">IBM Plex Mono</option>
+                                        <option value="'Space Mono', monospace">Space Mono</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Display & Decorative">
+                                        <option value="'Playfair Display', Georgia, serif">Playfair Display</option>
+                                        <option value="Cinzel, Georgia, serif">Cinzel</option>
+                                        <option value="'Cormorant Garamond', Garamond, serif">Cormorant</option>
+                                        <option value="'Abril Fatface', Georgia, serif">Abril Fatface</option>
+                                        <option value="Bebas Neue, Impact, sans-serif">Bebas Neue</option>
+                                        <option value="Oswald, Impact, sans-serif">Oswald</option>
+                                        <option value="Anton, Impact, sans-serif">Anton</option>
+                                        <option value="'Great Vibes', cursive">Great Vibes</option>
+                                        <option value="'Dancing Script', cursive">Dancing Script</option>
+                                        <option value="Pacifico, cursive">Pacifico</option>
+                                    </optgroup>
+                                </select>
+                                <button onclick="clearFormatting()" title="Clear formatting" style="width:auto; padding:0 10px; font-size:12px;">Clear</button>
+                            </div>
+                            
+                            <div id="post-excerpt" contenteditable="true" style="min-height:140px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1); padding:14px 16px; border-radius:10px; color:#ddd; outline:none; font-size:15.5px; line-height:1.6;" placeholder="Write from the heart..."></div>
+                            
+                            <button onclick="postAnnouncement()" style="margin-top:16px; background:#c9a227; color:#0a0a0f; padding:11px 28px; border:none; border-radius:999px; font-weight:600; cursor:pointer; font-size:14px;">Transmit</button>
+                        `;
+                        formContainer.style.display = 'block';
+                    }
+
+                    if (window.renderAnnouncements) {
+                        window.renderAnnouncements();
+                    }
+
+                    gsap.to(modal, {
+                        opacity: 0,
+                        duration: 0.25,
+                        onComplete: () => modal.remove()
+                    });
+
+                } else {
+                    input.style.borderColor = '#ef4444';
+                    setTimeout(() => { if (input) input.style.borderColor = 'rgba(255,255,255,0.15)'; }, 800);
+                }
+            };
+
+            btn.addEventListener('click', tryUnlock);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') tryUnlock();
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    gsap.to(modal, { opacity: 0, duration: 0.2, onComplete: () => modal.remove() });
+                }
+            });
+        }
+
+        function boot() {
+            initCinematicNameDrop();
+            initScrollReveals();
+            initMilestoneTilt();
+            initInteractiveTimeline();
+            initAmbientMotion();
+            initKeyboardNav();
+            initCinematicExtras();
+            initSecretAdmin();
+
+            console.log('%c[Asmodeus] Admin login: Click the small lock icon next to "Signals from right now."', 'color:#444; font-size:10px');
+
+        }
+
+        window.onload = boot;
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            deleteDoc,
+            doc,
+            query,
+            orderBy,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCaO-5zTbUlwoFsqoItLg14dG5397sLMqc",
+            authDomain: "my-website-bc849.firebaseapp.com",
+            projectId: "my-website-bc849",
+            storageBucket: "my-website-bc849.firebasestorage.app",
+            messagingSenderId: "789821682419",
+            appId: "1:789821682419:web:8a055731019f500c0dfd86",
+            measurementId: "G-GNEXT8J3DM"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.firebaseFns = {
+            collection,
+            addDoc,
+            deleteDoc,
+            doc,
+            query,
+            orderBy,
+            onSnapshot
+        };
+
+        window.isAdmin = false;
+
+        function renderAnnouncements() {
+            const container = document.getElementById('announcements-list');
+
+            const {
+                collection,
+                query,
+                orderBy,
+                onSnapshot,
+                deleteDoc,
+                doc
+            } = window.firebaseFns;
+
+            const postsRef = collection(window.db, 'announcements');
+            const q = query(postsRef, orderBy('timestamp', 'desc'));
+
+            onSnapshot(q, (snapshot) => {
+                container.innerHTML = '';
+                if (snapshot.empty) {
+                    container.innerHTML = '<div style="font-size:13px;color:var(--muted);padding:12px 0;">No announcements yet.</div>';
+                    return;
+                }
+                snapshot.forEach((snap) => {
+                    const post = snap.data();
+                    const div = document.createElement('div');
+                    div.className = 'post';
+                    div.innerHTML = `
+                        <div class="post-date">${post.date}</div>
+                        <div class="post-title">
+                            ${post.title}
+                            ${window.isAdmin ? `<span class="new-badge" style="background:#ef4444;cursor:pointer;" data-id="${snap.id}">×</span>` : ''}
+                        </div>
+                        <div class="post-excerpt">${post.body || ''}</div>
+                    `;
+                    container.appendChild(div);
+                });
+                if (window.isAdmin) {
+                    container.querySelectorAll('[data-id]').forEach(el => {
+                        el.addEventListener('click', async () => {
+                            await deleteDoc(doc(window.db, 'announcements', el.dataset.id));
+                        });
+                    });
+                }
+            });
+        }
+
+        async function postAnnouncement() {
+            const titleEl = document.getElementById('post-title');
+            const editor = document.getElementById('post-excerpt');
+
+            if (!titleEl.value.trim() || !editor.innerHTML.trim()) return;
+
+            const { collection, addDoc } = window.firebaseFns;
+
+            await addDoc(collection(window.db, 'announcements'), {
+                date: new Date().toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                }),
+                title: titleEl.value.trim(),
+                body: editor.innerHTML.trim(),
+                timestamp: Date.now()
+            });
+
+            titleEl.value = '';
+            editor.innerHTML = '';
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', renderAnnouncements);
+        } else {
+            renderAnnouncements();
+        }
+
+        window.renderAnnouncements = renderAnnouncements;
+        window.postAnnouncement = postAnnouncement;
+    </script>
+
+</body>
+</html>
