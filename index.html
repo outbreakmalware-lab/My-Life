@@ -189,37 +189,59 @@ h2.head em{font-style:italic;color:var(--gold)}
 .logrow .diff{font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:6px;display:block}
 .logrow.open .diff{color:var(--term)}
 
-/* ── friends ────────────────────────────────────────── */
-.friend{
-  background:linear-gradient(160deg,var(--panel2),var(--panel));
-  border:1px solid var(--wire);border-radius:18px;padding:0;overflow:hidden;position:relative;
-  transition:border-color .3s,transform .5s cubic-bezier(.23,1,.32,1),box-shadow .5s;
+/* ── friends: an actual list ─────────────────────────── */
+.flist{margin-top:46px;border:1px solid var(--wire);border-radius:14px;overflow:hidden;background:var(--panel)}
+.flist-head,.frow-main{
+  display:grid;grid-template-columns:38px 1fr 128px 104px 78px;
+  gap:14px;align-items:center;padding:13px 20px;font-family:var(--mono);font-size:11.5px;
 }
-.friend:hover{transform:translateY(-6px);border-color:rgba(224,182,74,.32);box-shadow:0 34px 80px -30px rgba(0,0,0,.9)}
-.friend .bar{display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--wire);font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:1.5px}
-.friend .bar i{font-size:9px}
-.friend .bar .d{width:9px;height:9px;border-radius:50%}
-.friend .pad{padding:28px}
-.friend .who{display:flex;align-items:center;gap:16px}
-.friend .mono-avatar{
-  width:56px;height:56px;border-radius:14px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--serif);font-size:26px;color:var(--void);background:var(--gold);
+.flist-head{
+  color:var(--faint);letter-spacing:1.6px;text-transform:uppercase;font-size:10px;
+  border-bottom:1px solid var(--wire);background:rgba(255,255,255,.015);
 }
-.friend.irl .mono-avatar{background:var(--term)}
-.friend .handle{font-family:var(--mono);font-size:13px;color:var(--dim)}
-.friend .real{font-family:var(--serif);font-size:27px;letter-spacing:-.8px;line-height:1.1}
-.friend .why{font-size:16px;color:#bcc0cd;margin-top:20px;line-height:1.65}
-.stats{margin-top:22px;border-top:1px dashed var(--wire);padding-top:16px;font-family:var(--mono);font-size:11.5px}
-.stats div{display:flex;justify-content:space-between;padding:5px 0;color:var(--faint)}
-.stats div span:last-child{color:var(--term)}
-.friend-actions{display:flex;gap:9px;margin-top:20px;flex-wrap:wrap}
+.frow{border-bottom:1px solid var(--wire);transition:background .25s}
+.frow:last-child{border-bottom:none}
+.frow-main{cursor:pointer;position:relative;transition:.22s}
+.frow:hover{background:var(--panel2)}
+.frow-main:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.frow .idx{color:var(--faint)}
+.frow .who{display:flex;align-items:center;gap:11px;min-width:0}
+.frow .d{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--faint)}
+.frow.on .d{background:var(--term);box-shadow:0 0 0 3px rgba(126,231,135,.14)}
+.frow.irl .d{background:var(--gold);box-shadow:0 0 0 3px rgba(224,182,74,.14)}
+.frow .nm{font-family:var(--serif);font-size:19px;letter-spacing:-.4px;color:var(--ink);white-space:nowrap}
+.frow .hd{color:var(--dim);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frow .slot{color:var(--gold);letter-spacing:.4px}
+.frow .stat{color:var(--dim)}
+.frow.on .stat{color:var(--term)}
+.frow .lat{color:var(--faint);text-align:right}
+.frow .caretx{position:absolute;right:6px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:10px;transition:.25s}
+.frow.open .caretx{transform:translateY(-50%) rotate(90deg);color:var(--gold)}
+
+.frow-body{display:none;padding:2px 20px 24px 70px;border-top:1px dashed var(--wire)}
+.frow.open .frow-body{display:block}
+.frow-body .why{font-size:15.5px;color:#bcc0cd;line-height:1.65;max-width:58ch;margin-top:18px}
+.frow-body .stats{margin-top:18px;font-family:var(--mono);font-size:11.5px;max-width:340px}
+.frow-body .stats div{display:flex;justify-content:space-between;gap:20px;padding:4px 0;color:var(--faint)}
+.frow-body .stats div span:last-child{color:var(--term)}
+.frow-body .friend-actions{display:flex;gap:9px;margin-top:20px;flex-wrap:wrap}
 .fbtn{
   font-family:var(--mono);font-size:11.5px;letter-spacing:.5px;padding:9px 15px;border-radius:8px;
   border:1px solid var(--wire2);background:transparent;color:var(--dim);cursor:pointer;transition:.2s;
 }
 .fbtn:hover{color:var(--gold);border-color:var(--gold)}
 .fbtn.danger:hover{color:var(--hot);border-color:var(--hot)}
+
+@media(max-width:760px){
+  .flist-head{display:none}
+  .frow-main{grid-template-columns:30px 1fr auto;gap:10px;padding:15px 16px;row-gap:4px}
+  .frow .slot{grid-column:2/4;color:var(--gold)}
+  .frow .stat{grid-column:2;font-size:10.5px}
+  .frow .lat{grid-column:3;font-size:10.5px}
+  .frow .nm{font-size:17px}
+  .frow .caretx{display:none}
+  .frow-body{padding:2px 16px 22px 46px}
+}
 
 /* ── dispatches ─────────────────────────────────────── */
 .feedbox{margin-top:38px;background:var(--panel);border:1px solid var(--wire);border-radius:16px;padding:30px 26px}
@@ -485,56 +507,107 @@ h2.head em{font-style:italic;color:var(--gold)}
 <section id="friends" class="scene s-deep">
   <div class="inner">
     <div class="prompt"><span class="user">asmodeus@localhost</span><span class="path">:~/friends</span><span class="cmd">$ friend --list --pinned</span><span class="caret"></span></div>
-    <h2 class="head">Two people I'd rewrite the whole codebase for.</h2>
-    <div class="body"><p>Everyone gets a mention. These two get a mount point.</p></div>
+    <h2 class="head">Four people I'd rewrite the whole codebase for.</h2>
+    <div class="body"><p>Everyone gets a mention. These four get a mount point. Click a row to expand.</p></div>
 
-    <!-- ✏️ EDIT ME: swap the names, handles, dates and lines below for your actual people -->
-    <div class="grid g2" style="margin-top:46px">
+    <!-- ✏️ EDIT ME: rows 03 and 04 are placeholders — swap names, handles, why-text and stats -->
+    <div class="flist">
+      <div class="flist-head">
+        <span>#</span><span>name / handle</span><span>slot</span><span>status</span><span>latency</span>
+      </div>
 
-      <div class="friend online">
-        <div class="bar"><span class="d" style="background:var(--term)"></span> STATUS: ONLINE · PINNED #1</div>
-        <div class="pad">
-          <div class="who">
-            <div class="mono-avatar">Nyx</div>
-            <div>
-              <div class="handle">@mylittlenyxie</div>
-              <div class="real">Best Online</div>
-            </div>
-          </div>
+      <!-- 01 ────────────────────────────────────────────── -->
+      <div class="frow on">
+        <div class="frow-main" tabindex="0" role="button" aria-expanded="false">
+          <span class="idx">01</span>
+          <span class="who"><span class="d"></span><span class="nm">Nyx</span><span class="hd">@mylittlenyxie</span></span>
+          <span class="slot">best online</span>
+          <span class="stat">online</span>
+          <span class="lat">6 tz</span>
+          <span class="caretx">▶</span>
+        </div>
+        <div class="frow-body">
           <div class="why">Met in a Discord server neither of us should have been in. Six timezones, zero excuses. Has debugged my code at 4am their time without once asking why it was on fire. Half my good ideas are just things they said first and I stole.</div>
           <div class="stats">
             <div><span>first message</span><span>years ago</span></div>
             <div><span>voice call uptime</span><span>99.2%</span></div>
             <div><span>arguments won by me</span><span>0</span></div>
-            <div><span>times they've been right</span><span>all of them</span></div>
           </div>
           <div class="friend-actions">
-            <button class="fbtn" data-poke="online">poke</button>
-            <button class="fbtn danger" data-block="online">block</button>
+            <button class="fbtn" data-poke>poke</button>
+            <button class="fbtn danger" data-block>block</button>
           </div>
         </div>
       </div>
 
-      <div class="friend irl">
-        <div class="bar"><span class="d" style="background:var(--gold)"></span> STATUS: IRL · PINNED #2 · VERIFIED HUMAN</div>
-        <div class="pad">
-          <div class="who">
-            <div class="mono-avatar">Praneeth</div>
-            <div>
-              <div class="handle">./real-life</div>
-              <div class="real">Best IRL</div>
-            </div>
-          </div>
+      <!-- 02 ────────────────────────────────────────────── -->
+      <div class="frow irl">
+        <div class="frow-main" tabindex="0" role="button" aria-expanded="false">
+          <span class="idx">02</span>
+          <span class="who"><span class="d"></span><span class="nm">Praneeth</span><span class="hd">./real-life</span></span>
+          <span class="slot">best irl</span>
+          <span class="stat">verified human</span>
+          <span class="lat">0ms</span>
+          <span class="caretx">▶</span>
+        </div>
+        <div class="frow-body">
           <div class="why">Knew me before I could write a for-loop. Doesn't care what I've built, which is exactly why I can tell them about it. The only person allowed to say "you're being weird about this again" and be immediately correct.</div>
           <div class="stats">
             <div><span>knows my actual name</span><span>true</span></div>
             <div><span>understands what i do</span><span>false</span></div>
             <div><span>supports it anyway</span><span>true</span></div>
-            <div><span>latency</span><span>0ms</span></div>
           </div>
           <div class="friend-actions">
-            <button class="fbtn" data-poke="irl">poke</button>
-            <button class="fbtn danger" data-block="irl">block</button>
+            <button class="fbtn" data-poke>poke</button>
+            <button class="fbtn danger" data-block>block</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 ── ✏️ yours ─────────────────────────────────── -->
+      <div class="frow on">
+        <div class="frow-main" tabindex="0" role="button" aria-expanded="false">
+          <span class="idx">03</span>
+          <span class="who"><span class="d"></span><span class="nm">Ceres</span><span class="hd">@ceres1024imokenp</span></span>
+          <span class="slot">best co-conspirator</span>
+          <span class="stat">online</span>
+          <span class="lat">~2min</span>
+          <span class="caretx">▶</span>
+        </div>
+        <div class="frow-body">
+          <div class="why">The one who says "what if we made it worse" and means it as engineering advice. Every project in unfinished/ has their fingerprints somewhere near the first commit.</div>
+          <div class="stats">
+            <div><span>projects started together</span><span>lots</span></div>
+            <div><span>projects finished together</span><span>fewer</span></div>
+            <div><span>regrets</span><span>none</span></div>
+          </div>
+          <div class="friend-actions">
+            <button class="fbtn" data-poke>poke</button>
+            <button class="fbtn danger" data-block>block</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 ── ✏️ yours ─────────────────────────────────── -->
+      <div class="frow">
+        <div class="frow-main" tabindex="0" role="button" aria-expanded="false">
+          <span class="idx">04</span>
+          <span class="who"><span class="d"></span><span class="nm">Nayomi</span><span class="hd">@nayomi</span></span>
+          <span class="slot">best rubber duck</span>
+          <span class="stat">idle</span>
+          <span class="lat">whenever</span>
+          <span class="caretx">▶</span>
+        </div>
+        <div class="frow-body">
+          <div class="why">Fixes my bugs by listening to me describe them. Has never written a line of my stack and has solved more of my problems than my debugger.</div>
+          <div class="stats">
+            <div><span>lines of my code read</span><span>0</span></div>
+            <div><span>bugs solved anyway</span><span>many</span></div>
+            <div><span>patience</span><span>unmetered</span></div>
+          </div>
+          <div class="friend-actions">
+            <button class="fbtn" data-poke>poke</button>
+            <button class="fbtn danger" data-block>block</button>
           </div>
         </div>
       </div>
@@ -685,7 +758,7 @@ const BOOT = [
   ['[  ok  ] mounting /dev/minecraft','ok'],
   ['[  ok  ] loading childhood.dat ......... 4.2 GiB','ok'],
   ['[ warn ] found 137 unfinished projects','warn'],
-  ['[  ok  ] friends: 2 pinned, many loved','ok'],
+  ['[  ok  ] friends: 4 pinned, many loved','ok'],
   ['[ warn ] caffeine levels: nominal-ish','warn'],
   ['[  ok  ] compiling personality ......... done','ok'],
   ['','f'],
@@ -830,7 +903,7 @@ function toggleMatrix(){
 
 /* ── scroll reveals + progress + statusline path ─────── */
 function reveals(){
-  const els = $$('.head, .body, .card, .repo, .logrow, .prompt, .friend, .note, .final .t, .final .cta, #runaway');
+  const els = $$('.head, .body, .card, .repo, .logrow, .prompt, .flist, .note, .final .t, .final .cta, #runaway');
   const io = new IntersectionObserver((entries)=>{
     entries.forEach((e,i)=>{
       if(!e.isIntersecting) return;
@@ -875,7 +948,7 @@ function gitlog(){
   });
 }
 
-/* ── friends: poke + un-blockable ────────────────────── */
+/* ── friends: expand + poke + un-blockable ───────────── */
 const POKES = [
   'poke sent. delivered. read. ignored. (they\'re gaming.)',
   'poke sent. they replied "wat" and went back to it.',
@@ -883,17 +956,34 @@ const POKES = [
   'poke queued behind 47 other pokes.'
 ];
 function friendsUX(){
-  $$('[data-poke]').forEach(b=>b.addEventListener('click',()=>{
+  $$('.frow').forEach(row=>{
+    const head = row.querySelector('.frow-main');
+    const body = row.querySelector('.frow-body');
+    const open = ()=>{
+      const isOpen = row.classList.toggle('open');
+      head.setAttribute('aria-expanded', isOpen);
+      if(isOpen && !RM) gsap.fromTo(body,{opacity:0,y:-8},{opacity:1,y:0,duration:.4,ease:'power3.out'});
+    };
+    head.addEventListener('click', open);
+    head.addEventListener('keydown', e=>{
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+    });
+  });
+
+  $$('[data-poke]').forEach(b=>b.addEventListener('click', e=>{
+    e.stopPropagation();
     toast('POKE', POKES[Math.floor(Math.random()*POKES.length)], true);
   }));
-  $$('[data-block]').forEach(b=>b.addEventListener('click',()=>{
+
+  $$('[data-block]').forEach(b=>b.addEventListener('click', e=>{
+    e.stopPropagation();
     egg('block');
     b.textContent = 'blocking...';
     setTimeout(()=>{
       b.textContent = 'block';
       toast('BLOCK FAILED','error: friendship is immutable. cannot unmount /dev/them — device is busy (being loved).');
     }, 900);
-    if(!RM) gsap.fromTo(b.closest('.friend'),{x:-7},{x:0,duration:.55,ease:'elastic.out(1,.35)'});
+    if(!RM) gsap.fromTo(b.closest('.frow'),{x:-7},{x:0,duration:.55,ease:'elastic.out(1,.35)'});
   }));
 }
 
@@ -905,7 +995,7 @@ function chaos(){
   toast('CHAOS MODE','gravity has been deprecated. rolling back in 4 seconds.');
   if(RM) return;
   document.body.classList.add('chaos');
-  const targets = $$('.card, .repo, .friend, .head, .logrow, .prompt, #name');
+  const targets = $$('.card, .repo, .frow, .head, .logrow, .prompt, #name');
   targets.forEach(el=>{
     gsap.to(el,{ y: innerHeight*(0.6+Math.random()*0.9), rotation:(Math.random()-.5)*120,
       duration:1.1+Math.random()*.9, ease:'power2.in', delay:Math.random()*.4 });
@@ -1065,7 +1155,7 @@ const FILES = {
   'secrets.txt':'1. i still google "array methods js"\n2. i name variables `thing2` under pressure\n3. i reread my own old code and cringe, which means it\'s working',
   'todo.md':'[x] rewrite the site\n[ ] finish the bot dashboard\n[ ] finish literally anything in unfinished/\n[ ] sleep',
   '.env':'nice try. it\'s empty. i learned that lesson exactly once and i learned it loudly.',
-  'friends.json':'{\n  "online": { "handle": "@nightowl", "status": "always", "blockable": false },\n  "irl":    { "handle": "./real-life", "latency": "0ms", "blockable": false }\n}'
+  'friends.json':'{\n  "01": { "handle": "@mylittlenyxie", "slot": "best online",         "blockable": false },\n  "02": { "handle": "./real-life",    "slot": "best irl",            "blockable": false },\n  "03": { "handle": "@handle",        "slot": "best co-conspirator", "blockable": false },\n  "04": { "handle": "@handle",        "slot": "best rubber duck",    "blockable": false }\n}'
 };
 
 const CMDS = {
@@ -1078,7 +1168,15 @@ const CMDS = {
     if(!a) return 'usage: cat &lt;file&gt;';
     return FILES[a] || 'cat: '+a+': no such file. try <span class="g">ls</span>.';
   },
-  friends:()=>'PINNED (2)\n  <span class="g">@nightowl</span>    online     best online    <span class="f">blockable: false</span>\n  <span class="g">./real-life</span>  irl        best irl       <span class="f">latency: 0ms</span>\n\n<span class="f">everyone else: too many to render. you\'re probably in there.</span>',
+  friends:()=>[
+    'PINNED (4)',
+    '  01  <span class="g">@mylittlenyxie</span>  best online          online          <span class="f">blockable: false</span>',
+    '  02  <span class="g">./real-life</span>     best irl             verified human  <span class="f">latency: 0ms</span>',
+    '  03  <span class="g">@handle</span>         best co-conspirator  online          <span class="f">blockable: false</span>',
+    '  04  <span class="g">@handle</span>         best rubber duck     idle            <span class="f">blockable: false</span>',
+    '',
+    '<span class="f">everyone else: too many to render. you\'re probably in there.</span>'
+  ].join('\n'),
   stack:()=>'node · discord.js · vanilla js · gsap · glsl · css\n<span class="f">frameworks: 0. regrets: several.</span>',
   neofetch:()=>{ egg('neofetch'); return [
     '<span class="g">      ▄▄▄▄▄▄      </span>  guest@asmodeus',
@@ -1188,9 +1286,11 @@ function consoleEggs(){
   console.log('%ctry: hire()  ·  friends()  ·  eggs()  ·  hug()', s1);
   window.hire = ()=>{ egg('console'); console.log('%copening mail...', s2); location.href='mailto:outbreakmalware@gmail.com?subject=hey'; return 'be nice, i get nervous.'; };
   window.friends = ()=>{ egg('console'); console.table([
-    {slot:'best online', handle:'@nightowl', status:'online, always', blockable:false},
-    {slot:'best irl', handle:'./real-life', status:'verified human', blockable:false}
-  ]); return 'both unblockable. it\'s a feature.'; };
+    {slot:'best online',         handle:'@mylittlenyxie', status:'online, always', blockable:false},
+    {slot:'best irl',            handle:'./real-life',    status:'verified human', blockable:false},
+    {slot:'best co-conspirator', handle:'@handle',        status:'online',         blockable:false},
+    {slot:'best rubber duck',    handle:'@handle',        status:'idle',           blockable:false}
+  ]); return 'all four unblockable. it\'s a feature.'; };
   window.eggs = ()=>{ egg('console'); console.log('%cfound '+found.size+'/'+TOTAL, s2);
     Object.entries(EGGS).forEach(([k,v])=>console.log((found.has(k)?'%c ✓ ':'%c ✗ ')+v, found.has(k)?s2:'color:#565b6b;font-family:monospace'));
     return 'press ~ and type secret for hints.'; };
